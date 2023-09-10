@@ -16,23 +16,96 @@ app.use(fileupload({
 }));
 app.use(cors());
 
+const dados = {
+  'adm':[
+  'padrão',
+  'generico@gmail.com',
+  '123',
+  ]
+};
+
 app.get('/users', (req,res) =>{
-  res.json([{'apelido':'adm',
-            'senha':'123'}]) 
-})
+  res.json(dadosJSON);
+});
 
-app.post('/login', (req, res) => {
-  const { apelido, senha } = req.body;
+// Converta os dados em formato JSON
+const dadosJSON = JSON.stringify(dados);
 
-  // Verificar as credenciais do usuário (por exemplo, comparar com um banco de dados)
-  if (apelido === 'adm' && senha === '123') {
-    // Credenciais corretas, o usuário está logado com sucesso
-    req.session.loggedIn = true; // Armazene o estado de login na sessão
-    res.json({ message: 'Login bem-sucedido' });
+// Nome do arquivo JSON que você deseja criar
+const nomeArquivo = 'dados.json';
+
+// Escreva os dados no arquivo JSON
+fs.writeFile(nomeArquivo, dadosJSON, (err) => {
+  if (err) {
+    console.error('Ocorreu um erro ao criar o arquivo JSON:', err);
   } else {
-    // Credenciais incorretas, o login falhou
-    res.status(401).json({ message: 'Credenciais inválidas' });
+    console.log('Arquivo JSON criado com sucesso!');
   }
+});
+
+
+// Receber dados do site e adicionar ao arquivo JSON
+app.post('/enviar-dados', (req, res) => {
+  // Receba os dados enviados pelo cliente no corpo da requisição
+  const { nome, apelido, email, senha} = req.body;
+  // Lê o conteúdo atual do arquivo JSON
+  fs.readFile(nomeArquivo, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Ocorreu um erro ao ler o arquivo JSON:', err);
+      res.status(500).json({ message: 'Erro ao ler o arquivo JSON' });
+      return;
+    }
+
+    // Parse o conteúdo JSON existente
+    const dadosExistente = data ? JSON.parse(data) : {};
+
+    //Verificar se esses dados ja existem e não criar um novo
+    console.log(dadosExistente[apelido]);
+    if(apelido == dadosExistente){
+      console.log("Dados já cadastrados");
+      return;
+    }
+    // Adicione os novos dados ao objeto existente
+    dadosExistente[apelido] = {nome, email, senha };
+
+    // Escreva o objeto atualizado de volta no arquivo JSON
+    fs.writeFile(nomeArquivo, JSON.stringify(dadosExistente), (err) => {
+      if (err) {
+        console.error('Ocorreu um erro ao escrever o arquivo JSON:', err);
+        res.status(500).json({ message: 'Erro ao escrever o arquivo JSON' });
+        return;
+      }
+      console.log('Arquivo JSON atualizado com sucesso!');
+      res.json({ message: 'Dados enviados e arquivo JSON atualizado com sucesso' });
+    });
+  });
+});
+
+//Verifica se o usuario existe
+app.post('/login', (req, res) => {
+  // Lê o conteúdo do arquivo JSON
+  fs.readFile(nomeArquivo, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Ocorreu um erro ao ler o arquivo JSON:', err);
+      res.status(500).json({ message: 'Erro ao ler o arquivo JSON' });
+      return;
+    }
+
+    // Parse o conteúdo JSON do arquivo
+    const dadosUser = JSON.parse(data);
+
+    const { apelido, senha } = req.body;
+    
+    // Verificar as credenciais do usuário
+    if (dadosUser[apelido] && dadosUser[apelido]["senha"] === senha) {
+      // Credenciais corretas, o usuário está logado com sucesso
+      req.session.loggedIn = true; // Armazene o estado de login na sessão
+      res.json({ message: 'Login bem-sucedido' });
+    } else {
+      // Credenciais incorretas ou usuário não encontrado, o login falhou
+      res.status(401).json({ message: 'Credenciais inválidas' });
+    }
+  });
 });
 
 // Rota para verificar o estado de login do usuário

@@ -25,7 +25,6 @@ function App() {
   const TelaVisivel = telaAtual === 'login' ? Login : Logar;
   return (
     <>
-
       <TelaVisivel
         onClick={alternarTela}
       />

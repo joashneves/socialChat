@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Login from './components/Logar.jsx'
-import Logar from './components/Inscrever.jsx'
+import { useState, useEffect } from 'react';
+import reactLogo from './assets/react.svg';
+import viteLogo from '/vite.svg';
+import './App.css';
+import Login from './components/Logar.jsx';
+import Logar from './components/Inscrever.jsx';
+import Bar from './components/Barra';
 import Api from './Api';
 import axios from 'axios';
 
@@ -25,6 +26,7 @@ function App() {
   const TelaVisivel = telaAtual === 'login' ? Login : Logar;
   return (
     <>
+      <Bar/>
       <TelaVisivel
         onClick={alternarTela}
       />

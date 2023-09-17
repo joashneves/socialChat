@@ -1,0 +1,34 @@
+
+.barImagem{
+    width: 64px;
+    height: 64px;
+    padding: 12px;
+}
+.avatarImagem{
+    width: 64px;
+    height: 64px;
+    padding: 12px;
+}
+.avatarImagem:hover, .barImagem:hover{
+    border-radius: 80%;
+    background-color:#03a9f4 ;
+    cursor: pointer;
+}
+.bar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    text-align: start;
+    background-color: aliceblue;
+    color: #1a1a1a;
+    border-radius: 12px;
+    width: 88px; /* Largura padrão para .bar */
+    transition: width 1s; /* Transição para a largura */
+  }
+  
+  .bar.barAtivo {
+    width: 164px; /* Largura quando .barAtivo é aplicada */
+  }
+  

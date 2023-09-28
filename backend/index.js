@@ -48,6 +48,7 @@ fs.writeFile(nomeArquivo, dadosJSON, (err) => {
 app.post('/enviar-dados', (req, res) => {
   // Receba os dados enviados pelo cliente no corpo da requisição
   const { nome, apelido, email, senha} = req.body;
+  console.log("Usuario criado com : " , nome, apelido, email, senha);
   // Lê o conteúdo atual do arquivo JSON
   fs.readFile(nomeArquivo, 'utf8', (err, data) => {
     if (err) {

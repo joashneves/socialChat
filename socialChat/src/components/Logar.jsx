@@ -7,6 +7,7 @@ function Login(props){
 
   const [apelido, setApelido] = useState('');
   const [senha, setSenha] = useState('');
+  const [logado , setLogado] = useState(false);
 
   const alternarTela = () => {
     // Chame a função passada como prop
@@ -26,13 +27,17 @@ function Login(props){
         if (response.data.message === 'Login bem-sucedido') {
             // Login bem-sucedido, faça o que desejar aqui
             console.log('Login bem-sucedido');
+            props.setLogado(true);
         } else {
             // Login falhou, trate de acordo
             alert('Credenciais inválidas');
+            props.setLogado(false);
         }
     } catch (error) {
         console.error('Erro ao fazer login:', error);
     }
+    
+    console.log(logado);
 };
 
     return(

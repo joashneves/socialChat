@@ -1,0 +1,8 @@
+.enviarMensagem{
+    display: flex;
+    flex-direction: column-reverse;
+    border-radius: 2rem;
+    justify-self: end;
+    height: 2rem;
+
+}
